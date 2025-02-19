@@ -1,4 +1,5 @@
 let canvas;
+
 // Note related
 let noteArray = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 let notes = [];
@@ -46,12 +47,13 @@ function draw() {
   
 }
 
-function drawNotes(_n) {
+function drawNotes(note) {
   
   background(255);
   
   let columns = 8;
   let rows = 8;
+
   let gridW = canvas.width / columns;
   let gridH = canvas.height / rows;
   
@@ -62,7 +64,8 @@ function drawNotes(_n) {
   if(fixed) {
     n = 12 * (octave + 1);
   } else {
-    n = _n;
+    n = note;
+    // Fixing an issue with displaying the grid of pads on lower octaves
     if(n < 0) {
       n = n + 12;
     }
@@ -75,7 +78,7 @@ function drawNotes(_n) {
     if(i > 0 && i % columns == 0) {
       x = 0;
       y = y - gridH;
-      n = n - 3; // To go up in 4ths
+      n = n - 3; // This is needed to go up in 4ths (default layout on Push)
     } else {
       x = i % columns * gridW;
     }
@@ -110,16 +113,17 @@ function setScale() {
   // Clean the array
   scala = [];
   // Find the root note
-  _n = noteArray.indexOf(root);
+  let f = noteArray.indexOf(root);
   // Get the notes from Scale.js
   for(let j = 0; j < scales[selectScale.value()].notes.length; j++) {
-   let n = _n + scales[selectScale.value()].notes[j];
+   let n = f + scales[selectScale.value()].notes[j];
    if(n > 11) {
      n = n % 12;
    }
    scala.push(noteArray[n]);
   }
-  drawNotes(_n);
+  console.log("Scala: "+scala);
+  drawNotes(f);
 }
 
 function setDisplayNotes() {
@@ -170,11 +174,11 @@ function Note(midi, note, octave) {
 }
 
 function createNotes() {
-  // Fill the Root Note selector
+  // Fill the Root Note selector in the UI
   for(let i = 0; i < noteArray.length; i++) {
     selectRoot.option(noteArray[i]);
   }
-  // Fill the Scale Selector
+  // Fill the Scale Selector in the UI
   for(let i = 0; i < scales.length; i++) {
     selectScale.option(scales[i].name, i);
   }
@@ -183,4 +187,5 @@ function createNotes() {
     let newNote = new Note(i, noteArray[i%12], floor(i/12));
     notes.push(newNote);
   }
+  console.log(notes);
 }
