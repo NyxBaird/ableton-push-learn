@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/addons/p5.sound.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="utf-8" />
+
+  </head>
+  <body>
+    <main>
+      <div id="canvas-container"></div>
+      <p>Root note and scale:
+        <select id="root">
+        </select>
+        <select id="scaleSel">
+        </select>
+      </p>
+      <p>Octave:
+        <button id="plus">+</button>
+        <button id="minus">-</button>
+      </p>
+      <p>Fixed:
+       <input type="checkbox" id="fixed" checked>
+      </p>
+      <p>Display note names
+        <input type="checkbox" id="showName" checked>
+      </p>
+    </main>
+    <script src="scales.js"></script>
+    <script src="sketch.js"></script>
+  </body>
+</html>
