@@ -15,6 +15,7 @@ let checkbox;
 let fixed = true;
 let checkName;
 let showNames = true;
+let showFlats = false;
 
 function setup() {
   canvas = createCanvas(480, 480);
@@ -30,6 +31,7 @@ function setup() {
   /// FIXED SCALE
   checkbox = select("#fixed").changed(setFixed);
   checkNames = select("#showName").changed(setDisplayNotes);
+  checkFlats = select("#showFlats").changed(setFlats);
   
   // Create notes
   createNotes();
@@ -99,7 +101,12 @@ function drawNotes(note) {
       if(showNames) {
         textAlign(CENTER, CENTER)
         fill(0);
-        text(notes[n].note+notes[n].octave, x + gridW/2, y + gridH/2);
+        let o = notes[n].note;
+        if(showFlats) {
+          let flats  = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
+          o = flats[noteArray.indexOf(o)];
+        }
+        text(o+notes[n].octave, x + gridW/2, y + gridH/2);
       }
     }
     n++;
@@ -114,6 +121,9 @@ function setScale() {
   scala = [];
   // Find the root note
   let f = noteArray.indexOf(root);
+  // Find the MIDI number
+  let m = notes[f+((octave+1)*12)];
+  // console.log("MIDI: "+ JSON.stringify(m));
   // Get the notes from Scale.js
   for(let j = 0; j < scales[selectScale.value()].notes.length; j++) {
    let n = f + scales[selectScale.value()].notes[j];
@@ -122,15 +132,26 @@ function setScale() {
    }
    scala.push(noteArray[n]);
   }
-  console.log("Scala: "+scala);
   drawNotes(f);
 }
 
 function setDisplayNotes() {
   if(checkNames.checked()) {
     showNames = true;
+    document.getElementById("showFlats").disabled = false;
   } else {
     showNames = false;
+    document.getElementById("showFlats").disabled = true;
+  }
+  console.log(select("#showFlats").disabled);
+  drawNotes(noteArray.indexOf(root) + (octave*12))
+}
+
+function setFlats() {
+  if(checkFlats.checked()) {
+    showFlats = true;
+  } else {
+    showFlats = false;
   }
   drawNotes(noteArray.indexOf(root) + (octave*12))
 }
