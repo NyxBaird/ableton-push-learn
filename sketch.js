@@ -38,7 +38,7 @@ function setup() {
   createNotes();
   
   // Draw the grid;
-  let defaultNote = 48; // 48 = C3
+  let defaultNote = 36; // C1 as on Push
   octave = notes[defaultNote].octave;
   setScale();
   drawNotes(defaultNote);
