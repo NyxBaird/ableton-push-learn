@@ -174,7 +174,7 @@ function setRoot() {
 
 function setOctDown() {
   octave--;
-  if(octave < -1) {
+  if(octave < -2) {
     octave++;
   }
   
@@ -183,7 +183,7 @@ function setOctDown() {
 
 function setOctUp() {
   octave++;
-  if(octave > 9) {
+  if(octave > 8) {
     octave--;
   }
   drawNotes(noteArray.indexOf(root) + (octave*12));
