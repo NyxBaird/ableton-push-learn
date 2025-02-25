@@ -7,6 +7,7 @@ let notes = [];
 // Initial setup
 let root = 'C';
 let octave;
+let midiShift = 2; // Need this shift to have the note range between C-2 and G8 (C3 = MIDI 60)
 
 // UI Related
 let selectRoot;
@@ -64,7 +65,7 @@ function drawNotes(note) {
   let n; // Starting MIDI note
   
   if(fixed) {
-    n = 12 * (octave + 1);
+    n = 12 * (octave + midiShift);
   } else {
     n = note;
     // Fixing an issue with displaying the grid of pads on lower octaves
@@ -162,13 +163,13 @@ function setFixed() {
   } else {
     fixed = false;
   }
-  drawNotes(noteArray.indexOf(root) + (octave +1)*12)
+  drawNotes(noteArray.indexOf(root) + (octave + midiShift)*12)
 }
 
 function setRoot() {
   root = selectRoot.value();
   setScale();
-  drawNotes(noteArray.indexOf(root) + (octave +1)*12);
+  drawNotes(noteArray.indexOf(root) + (octave + midiShift)*12);
 }
 
 function setOctDown() {
@@ -191,7 +192,7 @@ function setOctUp() {
 function Note(midi, note, octave) {
   this.midi = midi;
   this.note = note;
-  this.octave = octave - 1;
+  this.octave = octave - midiShift;
 }
 
 function createNotes() {
