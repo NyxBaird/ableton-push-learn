@@ -47,6 +47,7 @@ function setup() {
 
 function draw() {
   drawNotes(refNote);
+  //console.log(midiNotes);
 }
 
 /*
@@ -234,58 +235,34 @@ WebMidi
 .then(midiEnabled)
 .catch(err => alert(err));
 
-let midiConnectedDevice = null;
-
 // Function triggered when WEBMIDI.js is ready
 function midiEnabled() {
-  const midiSelect = document.getElementById("midiDevice");
-  midiSelect.innerHTML = ""; // Clear existing options
 
-  // Display available MIDI input devices
-  if (WebMidi.inputs.length < 1) {
-      console.log("No MIDI Input");
-  } else {
-      WebMidi.inputs.forEach((device, index) => {
-          let option = document.createElement("option");
-          option.value = index;
-          option.text = device.name;
-          midiSelect.add(option);
-      });
+    // Display available MIDI input devices
+    if (WebMidi.inputs.length < 1) {
+        console.log("No MIDI Input");
+    } 
+    else {
+        WebMidi.inputs.forEach((device, index) => {
+            var x = document.getElementById("midiDevice");
+            var option = document.createElement("option");
+            option.value = index;
+            option.text = device.name;
+            x.add(option);
+        });
+    }
+    // Need to update this 
+    let midiConnectedDevice = WebMidi.inputs[0];
 
-      // Set the default selected device
-      setMIDIDevice(0);
-  }
+    midiConnectedDevice.addListener("noteon", e => {
+        midiNotes.push(e.note.number);
+    });
+    
+    midiConnectedDevice.addListener("noteoff", e => {
+        var index = midiNotes.indexOf(e.note.number);
+        if (index > -1) {
+            midiNotes.splice(index, 1);
+        }
+    });
+
 }
-
-// Function to set the MIDI device and attach event listeners
-function setMIDIDevice(index) {
-  if (midiConnectedDevice) {
-      // Remove previous listeners
-      midiConnectedDevice.removeListener("noteon");
-      midiConnectedDevice.removeListener("noteoff");
-  }
-
-  midiConnectedDevice = WebMidi.inputs[index];
-
-  if (midiConnectedDevice) {
-      console.log("Connected to MIDI Device:", midiConnectedDevice.name);
-
-      // Add new listeners
-      midiConnectedDevice.addListener("noteon", e => {
-          midiNotes.push(e.note.number);
-      });
-
-      midiConnectedDevice.addListener("noteoff", e => {
-          let idx = midiNotes.indexOf(e.note.number);
-          if (idx > -1) {
-              midiNotes.splice(idx, 1);
-          }
-      });
-  }
-}
-
-// Event listener for MIDI device selection
-document.getElementById("midiDevice").addEventListener("change", function () {
-  const selectedIndex = parseInt(this.value, 10);
-  setMIDIDevice(selectedIndex);
-});
