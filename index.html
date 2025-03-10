@@ -3,6 +3,7 @@
   <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/p5.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/addons/p5.sound.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/webmidi@latest/dist/iife/webmidi.iife.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
     <meta charset="utf-8" />
 
@@ -27,6 +28,10 @@
       <p>Display note names
         <input type="checkbox" id="showName" checked>
         Use &flat; flats <input type="checkbox" id="showFlats">
+      </p>
+      <p>MIDI Port(s)
+        <select id="midiDevice">
+        </select>
       </p>
     </main>
     <footer>

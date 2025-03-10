@@ -50,12 +50,14 @@ function draw() {
   console.log(midiNotes);
 }
 
+/*
 function mousePressed() {
   midiNotes = [60, 63, 67];
 }
 function mouseReleased() {
   midiNotes = [];
 }
+*/
 
 function drawNotes(note) {
   
@@ -225,3 +227,51 @@ function createNotes() {
   }
   console.log(notes);
 }
+
+// MIDI
+// Enable WEBMIDI.js and trigger the midiEnabled() function when ready
+WebMidi
+.enable()
+.then(midiEnabled)
+.catch(err => alert(err));
+
+// Function triggered when WEBMIDI.js is ready
+function midiEnabled() {
+
+    let midiConnectedDevice = null;
+
+    // Display available MIDI input devices
+    if (WebMidi.inputs.length < 1) {
+        console.log("No MIDI Input");
+    } 
+    else {
+        WebMidi.inputs.forEach((device, index) => {
+            var x = document.getElementById("midiDevice");
+            var option = document.createElement("option");
+            option.value = index;
+            option.text = device.name;
+            x.add(option);
+        });
+    }
+
+    midiConnectedDevice = WebMidi.inputs[0];
+
+    midiConnectedDevice.addListener("noteon", e => {
+        midiNotes.push(e.note.number);
+    });
+    
+    midiConnectedDevice.addListener("noteoff", e => {
+        var index = midiNotes.indexOf(e.note.number);
+        if (index > -1) {
+            midiNotes.splice(index, 1);
+        }
+    });
+
+}
+
+document.getElementById("midiDevice").addEventListener("change", function () {
+  const selectedIndex = parseInt(this.value, 10);
+  midiConnectedDevice = WebMidi.inputs[selectedIndex]; // Update the selected MIDI device
+  console.log("Selected MIDI Device:", midiConnectedDevice.name);
+});
+
