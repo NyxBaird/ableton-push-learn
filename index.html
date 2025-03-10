@@ -3,11 +3,13 @@
   <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/p5.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/addons/p5.sound.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/webmidi@latest/dist/iife/webmidi.iife.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
     <meta charset="utf-8" />
 
   </head>
   <body>
+    <h1>Want to learn how to play Ableton Push?</h1>
     <main>
       <div id="canvas-container"></div>
       <p>Root note and scale:
@@ -27,7 +29,14 @@
         <input type="checkbox" id="showName" checked>
         Use &flat; flats <input type="checkbox" id="showFlats">
       </p>
+      <p>MIDI Port(s)
+        <select id="midiDevice">
+        </select>
+      </p>
     </main>
+    <footer>
+      <p><a href="https://github.com/federico-pepe/ableton-push-learn" target="_blank">GitHub</a></p>
+    </footer>
     <script src="scales.js"></script>
     <script src="sketch.js"></script>
   </body>

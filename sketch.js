@@ -7,7 +7,9 @@ let notes = [];
 // Initial setup
 let root = 'C';
 let octave;
-let midiShift = 2; // Need this shift to have the note range between C-2 and G8 (C3 = MIDI 60)
+let midiShift = 2;  // Need this shift to have the note range between C-2 and G8 (C3 = MIDI 60)
+let refNote;        // Use this variable to update and redraw the grid
+let midiNotes = []; // Array for MIDI input notes 
 
 // UI Related
 let selectRoot;
@@ -38,17 +40,24 @@ function setup() {
   createNotes();
   
   // Draw the grid;
-  let defaultNote = 36; // C1 as on Push
-  octave = notes[defaultNote].octave;
+  refNote = 36; // C1 as on Push
+  octave = notes[refNote].octave;
   setScale();
-  drawNotes(defaultNote);
-  
-  noLoop();
 }
 
 function draw() {
-  
+  drawNotes(refNote);
+  console.log(midiNotes);
 }
+
+/*
+function mousePressed() {
+  midiNotes = [60, 63, 67];
+}
+function mouseReleased() {
+  midiNotes = [];
+}
+*/
 
 function drawNotes(note) {
   
@@ -87,18 +96,24 @@ function drawNotes(note) {
     }
     // Avoid undefined error
     if(notes[n]) {
+
       // Let's color the grid.
       if(notes[n].note === root) {
         fill(255, 0, 0, 100);
       } else if(scala.indexOf(notes[n].note) >= 0 ) {
         fill(255);
-      } else {
+      } 
+      else {
         fill(127);
+      }
+      // Sending MIDI Inputs
+      if(midiNotes.includes(notes[n].midi)) {
+        fill(0, 255, 0);
       }
       // Draw the grid
       rect(x, y, gridW, gridH);
 
-      // Write the notes' names
+      // Write the notes' names on top of the pads
       if(showNames) {
         textAlign(CENTER, CENTER)
         fill(0);
@@ -133,7 +148,7 @@ function setScale() {
    }
    scala.push(noteArray[n]);
   }
-  drawNotes(f);
+  refNote = f;
 }
 
 function setDisplayNotes() {
@@ -145,7 +160,8 @@ function setDisplayNotes() {
     document.getElementById("showFlats").disabled = true;
   }
   console.log(select("#showFlats").disabled);
-  drawNotes(noteArray.indexOf(root) + (octave*12))
+
+  refNote = noteArray.indexOf(root) + (octave*12);
 }
 
 function setFlats() {
@@ -154,7 +170,7 @@ function setFlats() {
   } else {
     showFlats = false;
   }
-  drawNotes(noteArray.indexOf(root) + (octave*12))
+  refNote = noteArray.indexOf(root) + (octave*12);
 }
 
 function setFixed() {
@@ -163,13 +179,13 @@ function setFixed() {
   } else {
     fixed = false;
   }
-  drawNotes(noteArray.indexOf(root) + (octave + midiShift)*12)
+  refNote = noteArray.indexOf(root) + (octave + midiShift)*12;
 }
 
 function setRoot() {
   root = selectRoot.value();
   setScale();
-  drawNotes(noteArray.indexOf(root) + (octave + midiShift)*12);
+  refNote = noteArray.indexOf(root) + (octave + midiShift)*12;
 }
 
 function setOctDown() {
@@ -178,7 +194,7 @@ function setOctDown() {
     octave++;
   }
   
-  drawNotes(noteArray.indexOf(root) + (octave*12));
+  refNote = noteArray.indexOf(root) + (octave*12);
 }
 
 function setOctUp() {
@@ -186,7 +202,7 @@ function setOctUp() {
   if(octave > 8) {
     octave--;
   }
-  drawNotes(noteArray.indexOf(root) + (octave*12));
+  refNote = noteArray.indexOf(root) + (octave*12);
 }
 
 function Note(midi, note, octave) {
@@ -211,3 +227,51 @@ function createNotes() {
   }
   console.log(notes);
 }
+
+// MIDI
+// Enable WEBMIDI.js and trigger the midiEnabled() function when ready
+WebMidi
+.enable()
+.then(midiEnabled)
+.catch(err => alert(err));
+
+// Function triggered when WEBMIDI.js is ready
+function midiEnabled() {
+
+    let midiConnectedDevice = null;
+
+    // Display available MIDI input devices
+    if (WebMidi.inputs.length < 1) {
+        console.log("No MIDI Input");
+    } 
+    else {
+        WebMidi.inputs.forEach((device, index) => {
+            var x = document.getElementById("midiDevice");
+            var option = document.createElement("option");
+            option.value = index;
+            option.text = device.name;
+            x.add(option);
+        });
+    }
+
+    midiConnectedDevice = WebMidi.inputs[0];
+
+    midiConnectedDevice.addListener("noteon", e => {
+        midiNotes.push(e.note.number);
+    });
+    
+    midiConnectedDevice.addListener("noteoff", e => {
+        var index = midiNotes.indexOf(e.note.number);
+        if (index > -1) {
+            midiNotes.splice(index, 1);
+        }
+    });
+
+}
+
+document.getElementById("midiDevice").addEventListener("change", function () {
+  const selectedIndex = parseInt(this.value, 10);
+  midiConnectedDevice = WebMidi.inputs[selectedIndex]; // Update the selected MIDI device
+  console.log("Selected MIDI Device:", midiConnectedDevice.name);
+});
+
