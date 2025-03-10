@@ -7,7 +7,9 @@ let notes = [];
 // Initial setup
 let root = 'C';
 let octave;
-let midiShift = 2; // Need this shift to have the note range between C-2 and G8 (C3 = MIDI 60)
+let midiShift = 2;  // Need this shift to have the note range between C-2 and G8 (C3 = MIDI 60)
+let refNote;        // Use this variable to update and redraw the grid
+let midiNotes = []; // Array for MIDI input notes 
 
 // UI Related
 let selectRoot;
@@ -38,16 +40,21 @@ function setup() {
   createNotes();
   
   // Draw the grid;
-  let defaultNote = 36; // C1 as on Push
-  octave = notes[defaultNote].octave;
+  refNote = 36; // C1 as on Push
+  octave = notes[refNote].octave;
   setScale();
-  drawNotes(defaultNote);
-  
-  noLoop();
 }
 
 function draw() {
-  
+  drawNotes(refNote);
+  console.log(midiNotes);
+}
+
+function mousePressed() {
+  midiNotes = [60, 63, 67];
+}
+function mouseReleased() {
+  midiNotes = [];
 }
 
 function drawNotes(note) {
@@ -87,18 +94,24 @@ function drawNotes(note) {
     }
     // Avoid undefined error
     if(notes[n]) {
+
       // Let's color the grid.
       if(notes[n].note === root) {
         fill(255, 0, 0, 100);
       } else if(scala.indexOf(notes[n].note) >= 0 ) {
         fill(255);
-      } else {
+      } 
+      else {
         fill(127);
+      }
+      // Sending MIDI Inputs
+      if(midiNotes.includes(notes[n].midi)) {
+        fill(0, 255, 0);
       }
       // Draw the grid
       rect(x, y, gridW, gridH);
 
-      // Write the notes' names
+      // Write the notes' names on top of the pads
       if(showNames) {
         textAlign(CENTER, CENTER)
         fill(0);
@@ -133,7 +146,7 @@ function setScale() {
    }
    scala.push(noteArray[n]);
   }
-  drawNotes(f);
+  refNote = f;
 }
 
 function setDisplayNotes() {
@@ -145,7 +158,8 @@ function setDisplayNotes() {
     document.getElementById("showFlats").disabled = true;
   }
   console.log(select("#showFlats").disabled);
-  drawNotes(noteArray.indexOf(root) + (octave*12))
+
+  refNote = noteArray.indexOf(root) + (octave*12);
 }
 
 function setFlats() {
@@ -154,7 +168,7 @@ function setFlats() {
   } else {
     showFlats = false;
   }
-  drawNotes(noteArray.indexOf(root) + (octave*12))
+  refNote = noteArray.indexOf(root) + (octave*12);
 }
 
 function setFixed() {
@@ -163,13 +177,13 @@ function setFixed() {
   } else {
     fixed = false;
   }
-  drawNotes(noteArray.indexOf(root) + (octave + midiShift)*12)
+  refNote = noteArray.indexOf(root) + (octave + midiShift)*12;
 }
 
 function setRoot() {
   root = selectRoot.value();
   setScale();
-  drawNotes(noteArray.indexOf(root) + (octave + midiShift)*12);
+  refNote = noteArray.indexOf(root) + (octave + midiShift)*12;
 }
 
 function setOctDown() {
@@ -178,7 +192,7 @@ function setOctDown() {
     octave++;
   }
   
-  drawNotes(noteArray.indexOf(root) + (octave*12));
+  refNote = noteArray.indexOf(root) + (octave*12);
 }
 
 function setOctUp() {
@@ -186,7 +200,7 @@ function setOctUp() {
   if(octave > 8) {
     octave--;
   }
-  drawNotes(noteArray.indexOf(root) + (octave*12));
+  refNote = noteArray.indexOf(root) + (octave*12);
 }
 
 function Note(midi, note, octave) {
