@@ -47,17 +47,7 @@ function setup() {
 
 function draw() {
   drawNotes(refNote);
-  //console.log(midiNotes);
 }
-
-/*
-function mousePressed() {
-  midiNotes = [60, 63, 67];
-}
-function mouseReleased() {
-  midiNotes = [];
-}
-*/
 
 function drawNotes(note) {
   

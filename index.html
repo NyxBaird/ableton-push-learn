@@ -1,46 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/p5.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/addons/p5.sound.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/webmidi@latest/dist/iife/webmidi.iife.js"></script>
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <meta charset="utf-8" />
 
+    <title>Learn how to play Ableton Push</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
-    <h1>Want to learn how to play Ableton Push?</h1>
-    <main>
-      <div id="canvas-container"></div>
-      <p>Root note and scale:
-        <select id="root">
-        </select>
-        <select id="scaleSel">
-        </select>
-      </p>
-      <p>Octave:
-        <button id="plus">+</button>
-        <button id="minus">-</button>
-      </p>
-      <p>Fixed:
-       <input type="checkbox" id="fixed" checked>
-      </p>
-      <p>Display note names
-        <input type="checkbox" id="showName" checked>
-        Use &flat; flats <input type="checkbox" id="showFlats">
-      </p>
-      <p>MIDI Port(s)
-        <select id="midiDevice">
-        </select>
-      </p>
-      <p id="midiOutput">
-
-      </p>
-    </main>
-    <footer>
-      <p><a href="https://github.com/federico-pepe/ableton-push-learn" target="_blank">GitHub</a></p>
-    </footer>
+    <div class="container-fluid">
+      <h1>Learn how to play Ableton Push</h1>
+      <main>
+        <div id="canvas-container"></div>
+        <p>Root note and scale:
+          <select id="root">
+          </select>
+          <select id="scaleSel">
+          </select>
+        </p>
+        <p>Octave:
+          <button id="plus">+</button>
+          <button id="minus">-</button>
+        </p>
+        <p>Fixed:
+        <input type="checkbox" id="fixed" checked>
+        </p>
+        <p>Display note names
+          <input type="checkbox" id="showName" checked>
+          Use &flat; flats <input type="checkbox" id="showFlats">
+        </p>
+        <p>MIDI Input Port(s)
+          <select id="midiDevice">
+          </select>
+        </p>
+      </main>
+      <footer>
+        <p>This project is available on <a href="https://github.com/federico-pepe/ableton-push-learn" target="_blank">GitHub</a></p>
+      </footer>
+    </div>
     <script src="scales.js"></script>
     <script src="sketch.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   </body>
 </html>
