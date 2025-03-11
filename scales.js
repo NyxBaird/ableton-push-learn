@@ -1,6 +1,11 @@
 /* 
- * Scale file
- * Add a new scale to the array by entering the name and an array of its notes omitting the root note.
+ * This file is needed to visualize different scales
+ *
+ * To add a new scale:
+ * 1. Add an object to the array
+ * 2. Set the name
+ * 3. Add the notes that form the scale (in semitones) from the root note
+ * 
 */
 let scales = [
   {
