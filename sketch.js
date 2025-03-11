@@ -237,23 +237,40 @@ WebMidi
 
 // Function triggered when WEBMIDI.js is ready
 function midiEnabled() {
+  if (WebMidi.inputs.length < 1) {
+    console.log("No MIDI devices detected.");
+    return;
+  }
 
-    // Display available MIDI input devices
-    if (WebMidi.inputs.length < 1) {
-        console.log("No MIDI Input");
-    } 
-    else {
-        WebMidi.inputs.forEach((device, index) => {
-            var x = document.getElementById("midiDevice");
-            var option = document.createElement("option");
-            option.value = index;
-            option.text = device.name;
-            x.add(option);
-        });
+  const dropdown = document.getElementById("midiDevices");
+
+  // Populate dropdown with available MIDI devices
+  WebMidi.inputs.forEach((device, index) => {
+    const option = document.createElement("option");
+    option.value = index;
+    option.textContent = device.name;
+    dropdown.appendChild(option);
+  });
+
+  // Add event listener for device selection
+  dropdown.addEventListener("change", function () {
+    const selectedDevice = WebMidi.inputs[this.value];
+    if (selectedDevice) {
+      listenToMidi(selectedDevice);
     }
-    // Need to update this 
-    let midiConnectedDevice = WebMidi.inputs[0];
+  });
 
+}
+
+function listenToMidi(device) {
+  console.log("Listening to", device.name);
+  device.removeListener(); // Remove previous listeners to avoid duplicates
+  device.addListener("midimessage", event => {
+    const { data } = event;
+    console.log("MIDI Data Received:", data);
+    document.getElementById("midiOutput").textContent = `MIDI Message: ${data}`;
+
+    /*
     midiConnectedDevice.addListener("noteon", e => {
         midiNotes.push(e.note.number);
     });
@@ -264,5 +281,6 @@ function midiEnabled() {
             midiNotes.splice(index, 1);
         }
     });
-
+    */
+  });
 }
