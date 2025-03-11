@@ -249,7 +249,7 @@ function midiEnabled() {
     const option = document.createElement("option");
     option.value = index;
     option.textContent = device.name;
-    dropdown.appendChild(option);
+    dropdown.add(option);
   });
 
   // Add event listener for device selection
@@ -260,8 +260,8 @@ function midiEnabled() {
     }
   });
 
+    
 }
-
 function listenToMidi(device) {
   console.log("Listening to", device.name);
   device.removeListener(); // Remove previous listeners to avoid duplicates
