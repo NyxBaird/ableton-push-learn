@@ -13,34 +13,49 @@
     <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
-    <div class="container-fluid">
-      <h1>Learn how to play Ableton Push</h1>
+    <div class="container-fluid mt-2">
+      <h1>Ableton Push Visualizer</h1>
+      <p class="lead">Ableton Push is an amazing instrument but many people don't understand how the notes are laid out on its grid. I decided to create this simple visualizer that runs in the browser to help people understand Push's chromatic layout.</p>
       <main>
-        <div id="canvas-container"></div>
-        <p>Root note and scale:
-          <select id="root">
-          </select>
-          <select id="scaleSel">
-          </select>
-        </p>
-        <p>Octave:
-          <button id="plus">+</button>
-          <button id="minus">-</button>
-        </p>
-        <p>Fixed:
-        <input type="checkbox" id="fixed" checked>
-        </p>
-        <p>Display note names
-          <input type="checkbox" id="showName" checked>
-          Use &flat; flats <input type="checkbox" id="showFlats">
-        </p>
-        <p>MIDI Input Port(s)
-          <select id="midiDevice">
-          </select>
-        </p>
+        <div class="row">
+          <div class="col-12 py-2">
+            <div id="canvas-container" class="d-block"></div>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col">
+            <h2 class="h4">Options</h2>
+            <hr />
+          </div>
+        </div>
+        <div class="col"></div>
+          <p>Root note and scale:
+            <select id="root">
+            </select>
+            <select id="scaleSel">
+            </select>
+          </p>
+          <p>Octave:
+            <button id="plus">+</button>
+            <button id="minus">-</button>
+          </p>
+          <p>Fixed:
+          <input type="checkbox" id="fixed" checked>
+          </p>
+          <p>Display note names
+            <input type="checkbox" id="showName" checked>
+            Use &flat; flats <input type="checkbox" id="showFlats">
+          </p>
+          <p>MIDI Input Port(s)
+            <select id="midiDevice">
+            </select>
+          </p>
+        </div>
       </main>
-      <footer>
-        <p>This project is available on <a href="https://github.com/federico-pepe/ableton-push-learn" target="_blank">GitHub</a></p>
+      <footer class="row" class="fs-6">
+        <div class="col-12 text-center">
+          <p>Made by <a href="https://www.federicopepe.com" target="_blank">Federico Pepe</a>, Ableton Certified Trainer with p5.js and webmidi.js. This is an open source project available on <a href="https://github.com/federico-pepe/ableton-push-learn" target="_blank">GitHub</a>.</p>
+        </div>
       </footer>
     </div>
     <script src="scales.js"></script>

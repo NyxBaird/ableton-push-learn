@@ -21,7 +21,12 @@ let showNames = true;
 let showFlats = false;
 
 function setup() {
-  canvas = createCanvas(480, 480);
+  if(window.Width < 400) {
+    canvas = createCanvas(window.Width, window.Width);
+  } else {
+    canvas = createCanvas(500, 500);
+  }
+  
   canvas.parent('canvas-container');
   // UI
   /// ROOT
@@ -47,6 +52,12 @@ function setup() {
 
 function draw() {
   drawNotes(refNote);
+}
+
+function windowResized() {
+  if(window.Width < 400) {
+    resizeCanvas(window.Width, window.Width);
+  }
 }
 
 function drawNotes(note) {
@@ -89,12 +100,12 @@ function drawNotes(note) {
 
       // Let's color the grid.
       if(notes[n].note === root) {
-        fill(255, 0, 0, 100);
+        fill(250,179,174);
       } else if(scala.indexOf(notes[n].note) >= 0 ) {
         fill(255);
       } 
       else {
-        fill(127);
+        fill(167, 173, 178);
       }
       // Sending MIDI Inputs
       if(midiNotes.includes(notes[n].midi)) {
