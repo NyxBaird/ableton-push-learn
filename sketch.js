@@ -192,7 +192,8 @@ function setScale() {
     }
     scala.push(noteArray[n]);
   }
-  refNote = f;
+  // Recalculate refNote to include octave and midiShift
+  refNote = noteArray.indexOf(root) + (octave + midiShift) * 12;
 }
 
 function setDisplayNotes() {
