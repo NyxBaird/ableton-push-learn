@@ -95,7 +95,7 @@ function drawNotes(note) {
     }
   } else { // Move mode ignores fixed mode entirely
     // Always use non-fixed behavior for Move mode.
-    n = note - 3;
+    n = note - 3 + 24; // Set the default octave to C3 for Move
     if(n < 0) {
       n = n + 12;
     }
