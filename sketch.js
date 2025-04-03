@@ -293,7 +293,7 @@ WebMidi
   .then(midiEnabled)
   .catch(err => alert(err));
 
-=======
+
 // WebMidi
 // Enable WEBMIDI.js and trigger the midiEnabled() function when ready
 WebMidi.enable()
