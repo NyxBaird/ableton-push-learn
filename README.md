@@ -9,7 +9,7 @@ Ableton Push and Move are amazing instruments but many people don't understand h
 Thanks to all the people who contributed to this project:
 
 <a href = "https://github.com/federico-pepe/ableton-push-learn/graphs/contributors">
-  <img src = "https://contrib.rocks/image?repo=federico-pepe/ableton-push-learn/"/>
+  <img src = "https://contrib.rocks/image?repo=federico-pepe/ableton-push-learn"/>
 </a>
 
 Made with [contributors-img](https://contrib.rocks).
