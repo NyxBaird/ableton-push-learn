@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/p5.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/addons/p5.sound.min.js"></script>
+    
+    <!-- Polyfill: Check for WebMIDI support and provide a dummy function if unsupported -->
+    <script>
+      window.MIDI_SUPPORTED = !!navigator.requestMIDIAccess;
+      if (!window.MIDI_SUPPORTED) {
+        navigator.requestMIDIAccess = function(options) {
+          // Return a rejected promise to prevent errors in libraries expecting this function
+          return Promise.reject(new Error("WebMIDI is not supported by this browser"));
+        };
+        console.warn("WebMIDI is not supported by this browser. MIDI features will be disabled.");
+      }
+    </script>
+    
     <script src="https://cdn.jsdelivr.net/npm/webmidi@latest/dist/iife/webmidi.iife.js"></script>
 
     <title>Learn how to play Ableton Push</title>
@@ -58,8 +71,32 @@
         </div>
       </footer>
     </div>
+    
+    <!-- Load additional scripts -->
     <script src="scales.js"></script>
     <script src="sketch.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+      // Update the MIDI UI if WebMIDI is not supported.
+      document.addEventListener("DOMContentLoaded", function() {
+        if (!window.MIDI_SUPPORTED) {
+          var midiSelect = document.getElementById("midiDevice");
+          if (midiSelect) {
+            midiSelect.innerHTML = "<option>MIDI not supported</option>";
+            midiSelect.disabled = true;
+            
+            // Create a new <small> element for the note
+            var noteEl = document.createElement("small");
+            noteEl.textContent = "WebMIDI is supported in Edge, Chrome, Opera, and Firefox browsers.";
+            
+            // Append a line break and the note element right after the select element
+            midiSelect.parentNode.appendChild(document.createElement("br"));
+            midiSelect.parentNode.appendChild(noteEl);
+          }
+        }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" 
+            crossorigin="anonymous"></script>
   </body>
 </html>
