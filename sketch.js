@@ -231,11 +231,12 @@ function createNotes() {
 
 // WebMidi
 // Enable WEBMIDI.js and trigger the midiEnabled() function when ready
-WebMidi
-.enable()
-.then(midiEnabled)
-.catch(err => alert(err));
-
+WebMidi.enable()
+  .then(midiEnabled)
+  .catch(err => {
+    // Log the error instead of alerting
+    console.warn("MIDI could not be enabled:", err);
+  });
 let selectedDevice;
 
 // Function triggered when WEBMIDI.js is ready
