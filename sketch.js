@@ -66,7 +66,6 @@ function windowResized() {
 
 // Draw the grid of pads with appropriate note values and colors
 function drawNotes(note) {
-  console.log(`Note: ${note}, octave: ${octave}`);
   background(255);
   let columns = 8;
   let rows, gridH, gridW;
@@ -258,6 +257,7 @@ function setLayoutMode() {
     document.getElementById("fixed").disabled = false;
   } else {
     // In Move mode, set canvas height to 4 rows and force non-fixed mode.
+    // also set the refNote to C3 instead of C1
     refNote = 60;
     octave = notes[refNote].octave + midiShift;
     resizeCanvas(w, w / 2);
