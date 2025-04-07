@@ -66,6 +66,7 @@ function windowResized() {
 
 // Draw the grid of pads with appropriate note values and colors
 function drawNotes(note) {
+  console.log(`Note: ${note}, octave: ${octave}`);
   background(255);
   let columns = 8;
   let rows, gridH, gridW;
@@ -95,7 +96,7 @@ function drawNotes(note) {
     }
   } else { // Move mode ignores fixed mode entirely
     // Always use non-fixed behavior for Move mode.
-    n = note - 3 + 24; // Set the default octave to C3 for Move
+    n = note - 3;
     if(n < 0) {
       n = n + 12;
     }
@@ -257,6 +258,8 @@ function setLayoutMode() {
     document.getElementById("fixed").disabled = false;
   } else {
     // In Move mode, set canvas height to 4 rows and force non-fixed mode.
+    refNote = 60;
+    octave = notes[refNote].octave + midiShift;
     resizeCanvas(w, w / 2);
     let fixedCheckbox = document.getElementById("fixed");
     fixedCheckbox.checked = false;
