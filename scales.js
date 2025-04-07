@@ -9,15 +9,43 @@
 */
 let scales = [
   {
-    name: 'major',
+    name: 'Major',
     notes: [2, 4, 5, 7, 9, 11]
   },
   {
-    name: 'minor',
+    name: 'Minor',
     notes: [2, 3, 5, 7, 8, 10]
   },
   {
-    name: 'dorian',
+    name: 'Dorian',
     notes: [2, 3, 5, 7, 9, 10]
+  },
+  {
+    name: 'Mixolidian',
+    notes: [2, 4, 5, 7, 9, 10]
+  },
+  {
+    name: 'Lydian',
+    notes: [2, 4, 6, 7, 9, 11]
+  },
+  {
+    name: 'Phrygian',
+    notes: [1, 3, 5, 7, 8, 10]
+  },
+  {
+    name: 'Locrian',
+    notes: [1, 3, 5, 6, 8, 10]
+  },
+  {
+    name: 'Whole Tone',
+    notes: [2, 4, 6, 8, 10]
+  },
+  {
+    name: 'Half-whole Dim.',
+    notes: [1, 3, 4, 6, 7, 9, 10]
+  },
+  {
+    name: 'Whole-half Dim.',
+    notes: [2, 3, 5, 6, 8, 9, 11]
   }
 ]
