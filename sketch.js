@@ -66,7 +66,9 @@ const screenSize = () => ({
       return size;
     };
 
-
+/*
+ * Default PS5 Functions
+ */
 function setup() {
   let desiredSize = desiredCanvasSize();
 
@@ -99,7 +101,9 @@ function draw() {
   drawNotes(refNote);
 }
 
-// Adjust canvas size on window resize
+/*
+ * Adjusts canvas size on window resize
+ */
 let resizeTimeout;
 function windowResized() {
   // This timeout method is used to prevent the canvas from resizing multiple times during a single window resize event.
@@ -116,6 +120,9 @@ function windowResized() {
 }
 
 
+/*
+ * Utility functions
+ */
 // Draw the grid of pads with appropriate note values and colors
 function drawNotes(note) {
   background(255);
