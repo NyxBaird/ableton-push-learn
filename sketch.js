@@ -4,12 +4,12 @@
 let canvas,
     canvasElement = document.querySelector('canvas');
 
-
 /*
  * Note related
  */
 let noteArray = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'],
-    notes = [];
+    notes = [],
+    scala = [];
 
 
 /*
@@ -39,6 +39,10 @@ let selectRoot,               // Dropdown for root note selection
  */
 let layoutMode = "Push", // Default layout mode
     selectLayout;               // Dropdown for layout mode selection
+
+const HOVER_SCALE = 1.05;
+let isExpanded = false,
+    isHovered = false;
 
 /*
  * This stuff all pertains to the sizing of the canvas
@@ -72,7 +76,7 @@ const screenSize = () => ({
 function setup() {
     let desiredSize = desiredCanvasSize();
 
-    canvas = createCanvas(desiredSize, desiredSize, "P2D", canvasElement);
+    canvas = createCanvas(desiredSize, desiredSize, P2D, canvasElement);
 
     //Init the canvas
     canvas.parent('canvas-container');
@@ -102,22 +106,63 @@ function draw() {
 }
 
 /*
- * Adjusts canvas size on window resize
+ * Adjusts canvas sizes
  */
+//Adjusts size on window resize
 let resizeTimeout;
+function resizeVisualizer(size) {
+    if (layoutMode === "Push")
+        resizeCanvas(size, size);
+    else
+        resizeCanvas(size, size / 2);
+}
 function windowResized() {
     // This timeout method is used to prevent the canvas from resizing multiple times during a single window resize event.
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(function () {
-        let desiredSize = desiredCanvasSize();
-
-        if (layoutMode === "Push")
-            resizeCanvas(desiredSize, desiredSize);
+        if (isExpanded)
+            resizeVisualizer(Math.min(window.innerWidth * 0.9, window.innerHeight * 0.9))
         else
-            resizeCanvas(desiredSize, desiredSize / 2);
-
+            resizeVisualizer(desiredCanvasSize());
     }, 500);
 }
+canvasElement.addEventListener('mouseenter', () => {
+    isHovered = true;
+    if (!isExpanded)
+        resizeVisualizer(desiredCanvasSize() * HOVER_SCALE);
+});
+
+canvasElement.addEventListener('mouseleave', () => {
+    isHovered = false;
+    if (!isExpanded)
+        resizeVisualizer(desiredCanvasSize());
+});
+
+//The backdrop that appears when the canvas is maximized
+document.getElementById('canvasBackdrop').addEventListener('click', (e) => {
+    isExpanded = false;
+    e.target.style.display = 'none';
+    canvasElement.classList.remove('expanded');
+
+    resizeVisualizer(desiredCanvasSize())
+});
+
+//Maximize our canvas when it's clicked
+canvasElement.addEventListener('click', () => {
+    isExpanded = !isExpanded;
+    let backdrop = document.getElementById('canvasBackdrop');
+
+    if (isExpanded) {
+        backdrop.style.display = 'block';
+        canvasElement.classList.add('expanded');
+        resizeVisualizer(Math.min(window.innerWidth * 0.9, window.innerHeight * 0.9))
+    } else {
+        backdrop.style.display = 'none';
+        canvasElement.classList.remove('expanded');
+        resizeVisualizer(desiredCanvasSize())
+    }
+});
+
 
 
 /*
@@ -239,9 +284,6 @@ function drawNotes(note) {
         }
     }
 }
-
-let scala = [];
-
 function setScale() {
     scala = [];
     let f = noteArray.indexOf(root);
