@@ -47,7 +47,6 @@ let isExpanded = false,
 /*
  * This stuff all pertains to the sizing of the canvas
  */
-window.addEventListener("resize", windowResized);
 const screenSize = () => ({
         //These are more robust measurements that will work in a larger variety of browsers
         width: window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
@@ -91,6 +90,8 @@ function setup() {
     checkNames = select("#showName").changed(setDisplayNotes);
     checkFlats = select("#showFlats").changed(setFlats);
 
+    window.addEventListener("resize", windowResized);
+
     // Create the array of note objects and populate the UI selectors
     createNotes();
 
@@ -105,17 +106,19 @@ function draw() {
     drawNotes(refNote);
 }
 
+
 /*
  * Adjusts canvas sizes
  */
-//Adjusts size on window resize
-let resizeTimeout;
 function resizeVisualizer(size) {
     if (layoutMode === "Push")
         resizeCanvas(size, size);
     else
         resizeCanvas(size, size / 2);
 }
+
+//Adjusts size on window resize
+let resizeTimeout;
 function windowResized() {
     // This timeout method is used to prevent the canvas from resizing multiple times during a single window resize event.
     clearTimeout(resizeTimeout);
@@ -126,12 +129,13 @@ function windowResized() {
             resizeVisualizer(desiredCanvasSize());
     }, 500);
 }
+
+//Makes canvas pop in and out when hovered
 canvasElement.addEventListener('mouseenter', () => {
     isHovered = true;
     if (!isExpanded)
         resizeVisualizer(desiredCanvasSize() * HOVER_SCALE);
 });
-
 canvasElement.addEventListener('mouseleave', () => {
     isHovered = false;
     if (!isExpanded)
