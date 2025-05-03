@@ -1,36 +1,78 @@
-let canvas;
+/*
+ * Canvas Selectors
+ */
+let canvas,
+    canvasElement = document.querySelector('canvas');
 
-// Note related
-let noteArray = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-let notes = [];
 
-// Initial setup for note display
-let root = 'C';
-let octave;
-let midiShift = 2;  // This shift ensures the note range is between C-2 and G8 (e.g., C3 = MIDI 60)
-let refNote;        // Reference note used to update and redraw the grid
-let midiNotes = []; // Array to store currently active MIDI note numbers
+/*
+ * Note related
+ */
+let noteArray = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'],
+    notes = [];
 
-// UI elements and state flags
-let selectRoot;   // Dropdown for root note selection
-let selectScale;  // Dropdown for scale selection
-let checkbox;     // Checkbox element for fixed scale mode
-let fixed = true; // Flag indicating whether the scale is fixed
-let checkNames;   // Checkbox element for toggling display of note names
-let showNames = true;  // Flag for showing note names on pads
-let showFlats = false; // Flag for displaying flats instead of sharps
 
-// Layout mode variables for switching between "Push" and "Move"
-let layoutMode = "Push"; // Default layout mode
-let selectLayout;        // Dropdown for layout mode selection
+/*
+ * Initial setup for note display
+ */
+let root = 'C',
+    octave,
+    midiShift = 2, // This shift ensures the note range is between C-2 and G8 (e.g., C3 = MIDI 60)
+    refNote,               // Reference note used to update and redraw the grid
+    midiNotes = []; // Array to store currently active MIDI note numbers
+
+
+/*
+ * UI elements and state flags
+ */
+let selectRoot,               // Dropdown for root note selection
+    selectScale,              // Dropdown for scale selection
+    checkbox,                 // Checkbox element for fixed scale mode
+    fixed = true,     // Flag indicating whether the scale is fixed
+    checkNames,               // Checkbox element for toggling display of note names
+    showNames = true, // Flag for showing note names on pads
+    showFlats = false;// Flag for displaying flats instead of sharps
+
+
+/*
+ * Layout mode variables for switching between "Push" and "Move"
+ */
+let layoutMode = "Push", // Default layout mode
+    selectLayout;               // Dropdown for layout mode selection
+
+/*
+ * This stuff all pertains to the sizing of the canvas
+ */
+window.addEventListener("resize", windowResized);
+const screenSize = () => ({
+      //These are more robust measurements that will work in a larger variety of browsers
+      width: window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
+      height: window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+    }),
+    desiredCanvasSize = function(){
+      let screen = screenSize(),
+          canvasMargin = 20
+          size = 500; //This is our default
+
+      // Create the canvas based on window width (use square canvas for small screens)
+      if(screen.width < size)
+        size = screen.width - canvasMargin;
+
+        //Making the canvas a little bigger on high resolution screens
+      else if (screen.width > screen.height && screen.height > 1000)
+        size = screen.height * 0.6;
+
+
+      return size;
+    };
+
 
 function setup() {
-  // Create the canvas based on window width (use square canvas for small screens)
-  if(window.Width < 400) {
-    canvas = createCanvas(window.Width, window.Width);
-  } else {
-    canvas = createCanvas(500, 500);
-  }
+  let desiredSize = desiredCanvasSize();
+
+  canvas = createCanvas(desiredSize, desiredSize, "P2D", canvasElement);
+
+  //Init the canvas
   canvas.parent('canvas-container');
   
   // Initialize UI elements and their event handlers
@@ -58,11 +100,21 @@ function draw() {
 }
 
 // Adjust canvas size on window resize
+let resizeTimeout;
 function windowResized() {
-  if(window.Width < 400) {
-    resizeCanvas(window.Width, window.Width);
-  }
+  // This timeout method is used to prevent the canvas from resizing multiple times during a single window resize event.
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(function() {
+    let desiredSize = desiredCanvasSize();
+
+    if (layoutMode === "Push")
+      resizeCanvas(desiredSize, desiredSize);
+    else
+      resizeCanvas(desiredSize, desiredSize/2);
+
+  }, 500);
 }
+
 
 // Draw the grid of pads with appropriate note values and colors
 function drawNotes(note) {
@@ -251,10 +303,16 @@ function setOctUp() {
 function setLayoutMode() {
   layoutMode = selectLayout.value();
   let w = canvas.width;
+
   if (layoutMode === "Push") {
     resizeCanvas(w, w);
+
     // Re-enable fixed mode in Push mode
     document.getElementById("fixed").disabled = false;
+
+    // Set our note and octave back to the Push's default values.
+    refNote = 36;
+    octave = notes[refNote].octave;
   } else {
     // In Move mode, set canvas height to 4 rows and force non-fixed mode.
     // also set the refNote to C3 instead of C1
@@ -291,13 +349,6 @@ function createNotes() {
 
 // --- WebMidi Integration ---
 
-WebMidi
-  .enable()
-  .then(midiEnabled)
-  .catch(err => alert(err));
-
-
-// WebMidi
 // Enable WEBMIDI.js and trigger the midiEnabled() function when ready
 WebMidi.enable()
   .then(midiEnabled)
@@ -340,3 +391,4 @@ function listenToMidi() {
     }
   });
 }
+
