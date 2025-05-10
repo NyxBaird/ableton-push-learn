@@ -441,7 +441,6 @@ function midiEnabled() {
 
 function listenToMidi() {
     selectedDevice.addListener("noteon", e => {
-        console.log("ON: ", e);
         midiNotes.push(e.note.number);
     });
     selectedDevice.addListener("noteoff", e => {
