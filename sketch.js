@@ -215,12 +215,16 @@ function drawNotes(note) {
         // Draw Push grid (8x8)
         let x = 0;
         let y = height - gridH;
+        let baseNote = n;
+
         for (let i = 0; i < columns * rows; i++) {
             if (i > 0 && i % columns == 0) {
                 x = 0;
                 y = y - gridH;
                 // In Push mode, the note progression on each new row decreases by 3 semitones.
-                n = n - 3;
+                baseNote = baseNote + 8;  // -3 +12 = +9 to maintain correct octave
+                n = baseNote;
+
             } else {
                 x = (i % columns) * gridW;
             }
@@ -411,6 +415,7 @@ WebMidi.enable()
         console.warn("MIDI could not be enabled:", err);
     });
 
+// This is our MIDI device
 let selectedDevice;
 
 function midiEnabled() {
@@ -436,6 +441,7 @@ function midiEnabled() {
 
 function listenToMidi() {
     selectedDevice.addListener("noteon", e => {
+        console.log("ON: ", e);
         midiNotes.push(e.note.number);
     });
     selectedDevice.addListener("noteoff", e => {
